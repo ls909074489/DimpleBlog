@@ -1,4 +1,4 @@
-﻿# 数据源配置
+# 数据源配置
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource

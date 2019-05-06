@@ -130,4 +130,3 @@
 |14|blockUI|遮罩层|[druid](http://malsup.com/jquery/block/)
 |15|fullscreen|全屏|[fullscreen](https://fullscreenmedia.co/)
 
-"# DimpleBlog" 

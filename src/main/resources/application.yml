@@ -12,8 +12,8 @@ dimple:
   addressEnabled: true
   #七牛云配置
   qiniuyun:
-    accessKey: cMatXKTmcGhTj-r1l8eUaLVVpDff45q35AlvxhwN
-    secretKey: -TywFSAsObQwifPWkybPmy34XnZGgUzi0CMMyOGF
+    accessKey: tq8X9efPviPasgmoz6kcIzDuE_v4T-UJQXchcWgz
+    secretKey: Yejcd3g3Z_iOmu_jW6hB-euwxqbyqvJkslZzoXrV
     bucket: images
     path: http://images.bianxiaofeng.com
     imageMaxSize: 52428800
@@ -46,7 +46,7 @@ logging:
 user:
   password:
     # 密码错误{maxRetryCount}次锁定10分钟
-    maxRetryCount: 8
+    maxRetryCount: 5
 
 # Spring配置
 spring:
