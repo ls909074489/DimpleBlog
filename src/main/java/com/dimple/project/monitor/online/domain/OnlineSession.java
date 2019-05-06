@@ -1,5 +1,7 @@
 package com.dimple.project.monitor.online.domain;
 
+import java.io.Serializable;
+
 import org.apache.shiro.session.mgt.SimpleSession;
 
 /**
@@ -9,7 +11,9 @@ import org.apache.shiro.session.mgt.SimpleSession;
  * @Date: 2019/3/13
  * @Version: 1.1
  */
-public class OnlineSession extends SimpleSession {
+public class OnlineSession extends SimpleSession implements Serializable{
+	
+	
     private static final long serialVersionUID = 1L;
 
     /**

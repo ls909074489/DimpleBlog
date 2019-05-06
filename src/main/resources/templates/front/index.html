@@ -217,12 +217,15 @@
                 <div class="swiper-wrapper">
                     <div class="swiper-slide" th:each="carouselMap:${carouselMaps}">
                         <div class="content">
-                            <div class="txt"><h3 th:text="${carouselMap.title}"></h3>
+                            <div class="txt" style="background: none;">
+                            	<h3 th:text="${carouselMap.title}"  style="background: none;"></h3>
                                 <p th:text="${carouselMap.subTitle}"></p>
                             </div>
                             <a th:target="${(carouselMap.target=='1')?'_blank':''}"
                                th:href="${'/f/carouselMap/'+carouselMap.carouselId+'?url='+carouselMap.url}"
-                               class="link">详情点击</a></div>
+                               class="link">详情点击
+                            </a>
+                        </div>
                         <div class="img-fix">
                             <div class="img-inner">
                                 <img th:src="${carouselMap.imgUrl}" class="imgs">
