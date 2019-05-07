@@ -49,6 +49,9 @@
 <header th:replace="include-front :: header"></header>
 <!--内容区开始-->
 <div class="container">
+	<div id="baidumapcontainer" style="height: 200px;"></div> 
+	<div th:replace="baidu-map :: newmap('baidumapcontainer',113.558223,22.399745)"></div>
+		
     <!--最新文章-->
     <section class="mysection">
         <article>

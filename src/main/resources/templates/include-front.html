@@ -247,10 +247,13 @@
                         src="http://i.tianqi.com/index.php?c=code&id=34&icon=1&num=3"></iframe>
             </li>
             <li th:each="blog:${newestUpdateBlog}">
-                <span><i class="el-arrow-up"></i>最近：<font class="blue-text">边小丰</font><span
-                        th:text="${#dates.format(blog.updateTime, 'MM-dd hh:mm')}"> 03-01 09:30</span></span>
-                <a th:href="${'/f/article/'+blog.blogId+'.html'}" th:title="${blog.title}"> 更新了<b
-                        class="lable">文章</b></a>
+                <span>
+                	<i class="el-arrow-up"></i>最近：<font class="blue-text">边小丰</font>
+                	<span th:text="${#dates.format(blog.updateTime, 'MM-dd hh:mm')}"> 03-01 09:30</span>
+                </span>
+                <a th:href="${'/f/article/'+blog.blogId+'.html'}" th:title="${blog.title}"> 更新了
+                	<b class="lable">文章</b>
+                </a>
             </li>
         </ul>
     </div>
@@ -269,18 +272,23 @@
                     </a>
                 </div>
                 <div class="arc-right">
-                    <h4 class="blue-text"><a th:href="${'/f/article/'+blog.blogId+'.html'}" th:text="${blog.title}"></a>
+                    <h4 class="blue-text">
+                    	<a th:href="${'/f/article/'+blog.blogId+'.html'}" th:text="${blog.title}"></a>
                     </h4>
                     <p th:text="${blog.summary}"></p>
                     <ul>
                         <li>
                             <a th:title="${'发表于'+#dates.format(blog.createTime, 'MM-dd hh:mm')}">
-                                <i class="el-time"></i><span
-                                    th:text="${#dates.format(blog.createTime, 'MM-dd hh:mm')}"></span>
+                                <i class="el-time"></i>
+                                <span th:text="${#dates.format(blog.createTime, 'MM-dd hh:mm')}"></span>
                             </a>
                         </li>
-                        <li><a th:title="${blog.click+'次浏览'}"><i class="el-fire"></i><span
-                                th:text="${blog.click}"></span> </a></li>
+                        <li>
+                        	<a th:title="${blog.click+'次浏览'}">
+                        		<i class="el-fire"></i>
+                        		<span th:text="${blog.click}"></span> 
+                        	</a>
+                        </li>
                     </ul>
                 </div>
             </li>
@@ -301,15 +309,19 @@
     </div>
     <!--友情链接-->
     <div class="side-link ">
-        <h4 class="index-title"><i class="el-paper-clip"></i>友情链接
+        <h4 class="index-title">
+        	<i class="el-paper-clip"></i>友情链接
             <small>Friend Links</small>
-            <a href="/f/link.html"><i
-                    class="el el-plus"></i>申请</a></h4>
+            <a href="/f/link.html">
+            	<i class="el el-plus"></i>申请
+            </a>
+        </h4>
         <ul>
             <li th:each="link:${links}">
                 <a th:class="${'tstyle-'+(linkStat.index+1)%5}"
                    th:href="${'/f/linkRedirect?ref='+link.url+'&id='+link.linkId}"
-                   target="_blank" th:title="${link.title}" th:text="${link.title}">娱乐</a>
+                   target="_blank" th:title="${link.title}" th:text="${link.title}">娱乐
+                </a>
             </li>
         </ul>
     </div>

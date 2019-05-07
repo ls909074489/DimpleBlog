@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="newmap(eleId,longitude,latitude)" class="newmap">
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=AS3sFhbE017HXECAUGjt8R9v"></script>
+	<script>
+	 	var map = new BMap.Map([[${eleId}]]);
+		// 创建地图实例  
+		var point = new BMap.Point([[${longitude}]], [[${latitude}]]);
+		// 创建点坐标  
+		map.centerAndZoom(point, 16);
+		// 初始化地图，设置中心点坐标和地图级别  
+		map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+		map.addControl(new BMap.NavigationControl()); // 添加平移缩放控件
+		map.addControl(new BMap.ScaleControl()); // 添加比例尺控件
+		var marker = new BMap.Marker(point);        // 创建标注    
+		map.addOverlay(marker);                     // 将标注添加到地图中 
+		map.panTo(point); //转到该点位置
+		
+		var centerPixel = map.pointToOverlayPixel(map.getCenter());
+        //通过设置地图的中心点，使定位点显示在手机上部分区域
+        map.setCenter(map.overlayPixelToPoint({x:centerPixel.x-400,y:centerPixel.y-100}));
+	</script>
+</div>
+</html>
