@@ -1,6 +1,7 @@
 package com.dimple.project.dashboard.controller;
 
 import com.dimple.common.constant.BlogConstants;
+import com.dimple.common.utils.CookieUtils;
 import com.dimple.framework.config.SystemConfig;
 import com.dimple.framework.shiro.session.OnlineSessionDAO;
 import com.dimple.framework.web.controller.BaseController;
@@ -18,11 +19,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import java.net.UnknownHostException;
 import java.util.List;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @className: DashboardController
@@ -52,7 +58,7 @@ public class DashboardController extends BaseController {
 
     // 系统首页
     @GetMapping("/index")
-    public String index(ModelMap mmap) {
+    public String index(ModelMap mmap,HttpServletRequest request) {
         // 取身份信息
         User user = getSysUser();
         // 根据用户id取出菜单
@@ -60,7 +66,7 @@ public class DashboardController extends BaseController {
         mmap.put("menus", menus);
         mmap.put("user", user);
         mmap.put("copyrightYear", systemConfig.getCopyrightYear());
-        return "index";
+        return "index_"+getTheme(request);
     }
 
 
@@ -107,4 +113,45 @@ public class DashboardController extends BaseController {
         return AjaxResult.success().put("data", visitData);
     }
 
+    
+    /**
+   	 * 
+   	 * @title: getTheme
+   	 * @description: 加载风格
+   	 * @param request
+   	 * @return
+   	 * @return: String
+   	 */
+   	private String getTheme(HttpServletRequest request) {
+   		// 默认风格
+   		String theme = "tab";
+   		if (StringUtils.isEmpty(theme)) {
+   			theme = "nomal";
+   		}
+   		// cookies配置中的模版
+   		Cookie[] cookies = request.getCookies();
+   		for (Cookie cookie : cookies) {
+   			if (cookie == null || StringUtils.isEmpty(cookie.getName())) {
+   				continue;
+   			}
+   			if (cookie.getName().equalsIgnoreCase("theme")) {
+   				theme = cookie.getValue();
+   			}
+   		}
+   		return theme;
+   	}
+
+   	/**
+   	 * Coookie设置
+   	 */
+   	@RequestMapping(value = "/theme/{theme}")
+   	public String getThemeInCookie(ModelMap mmap,@PathVariable String theme, HttpServletRequest request,
+   			HttpServletResponse response) {
+   		if (!StringUtils.isEmpty(theme)) {
+   			CookieUtils.setCookie(response, "theme", theme);
+   		} else {
+   			theme = CookieUtils.getCookie(request, "theme");
+   		}
+   		return index(mmap, request);
+   	}
 }
