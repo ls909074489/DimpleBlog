@@ -15,11 +15,35 @@
 		map.addControl(new BMap.ScaleControl()); // 添加比例尺控件
 		var marker = new BMap.Marker(point);        // 创建标注    
 		map.addOverlay(marker);                     // 将标注添加到地图中 
+		//marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+		marker.enableDragging();
+		//标注拖拽后的位置
+       marker.addEventListener("dragend", function (e) {
+           console.info("当前位置：" + e.point.lng + ", " + e.point.lat);
+       });
+		
 		map.panTo(point); //转到该点位置
 		
 		var centerPixel = map.pointToOverlayPixel(map.getCenter());
         //通过设置地图的中心点，使定位点显示在手机上部分区域
         map.setCenter(map.overlayPixelToPoint({x:centerPixel.x-400,y:centerPixel.y-100}));
+        
+        
+        function addLabel(){
+        	var opts = {
+   			  position : point,    // 指定文本标注所在的地理位置
+   			  offset   : new BMap.Size(10, -30)    //设置文本偏移量
+   			}
+   			var label = new BMap.Label("欢迎使用百度地图，这是一个简单的文本标注哦~", opts);  // 创建文本标注对象
+   			label.setStyle({
+   				 color : "red",
+   				 fontSize : "12px",
+   				 height : "20px",
+   				 lineHeight : "20px",
+   				 fontFamily:"微软雅黑"
+   			 });
+   		    map.addOverlay(label); 
+        }
 	</script>
 </div>
 </html>

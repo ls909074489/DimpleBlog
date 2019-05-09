@@ -82,7 +82,8 @@ jQuery(function () {
 
         chunked: true,
         // server: 'http://webuploader.duapp.com/server/fileupload.php',
-        server: '/qiniu/image/upload',
+        //server: '/qiniu/image/upload',
+        server: '/common/upload',
         fileNumLimit: 300,
         fileSizeLimit: 5 * 1024 * 1024,    // 200 M
         fileSingleSizeLimit: 1 * 1024 * 1024    // 50 M

@@ -123,6 +123,7 @@ public class QiNiuUtils {
         } catch (QiniuException e) {
             e.printStackTrace();
         }
+        list.add("/img/657b07046abc1a8dd3de65ea80f37ded.jpg");
         return list;
     }
 }

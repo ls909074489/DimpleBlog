@@ -37,7 +37,9 @@
                         </ul>
                     </div>
                 </div>
-
+				<div>
+					<input type="button" onclick="submitHandler();" value="11111"/>
+				</div>
                 <div class="panel-body">
                     <div class="tab-content">
                         <div id="upload" class="tab-pane active">
@@ -84,7 +86,7 @@
 <script src="/static/ajax/libs/webUploader/webuploader.nolog.js"
         th:src="@{/ajax/libs/webUploader/webuploader.nolog.js}"></script>
 <script src="/static/ajax/libs/webUploader/webuploader-custom.js"
-        th:src="@{/ajax/libs/webUploader/webuploader-custom.js}"></script>
+        th:src="@{/ajax/libs/webUploader/webuploader-custom.js?v=2}"></script>
 <script src="/static/ajax/libs/image-picker/image-picker.min.js"
         th:src="@{/ajax/libs/image-picker/image-picker.min.js}"></script>
 <script>
@@ -93,6 +95,8 @@
     });
 
     function submitHandler() {
+    	console.info("submitHandler=====111==========");
+    	console.info($(".image-picker"));
         return $(".image-picker").val();
     }
 

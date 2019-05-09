@@ -227,4 +227,15 @@ public class HomeController extends BaseController {
         linkService.applyLink(link);
         return AjaxResult.success();
     }
+    
+    
+    /**
+     * 图片显示
+     */
+    @VLog(title = "图片显示")
+    @GetMapping("/f/images.html")
+    public String images(Model model) {
+        setCommonMessage(model);
+        return "front/images";
+    }
 }
