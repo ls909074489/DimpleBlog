@@ -58,7 +58,7 @@ public class DashboardController extends BaseController {
 
     // 系统首页
     @GetMapping("/index")
-    public String index(ModelMap mmap,HttpServletRequest request) {
+    public String index(ModelMap mmap,HttpServletRequest request,HttpServletResponse response) {
         // 取身份信息
         User user = getSysUser();
         // 根据用户id取出菜单
@@ -66,7 +66,8 @@ public class DashboardController extends BaseController {
         mmap.put("menus", menus);
         mmap.put("user", user);
         mmap.put("copyrightYear", systemConfig.getCopyrightYear());
-        return "index_"+getTheme(request);
+        String theme = getTheme(request,response);
+        return "index_"+ theme;
     }
 
 
@@ -122,7 +123,7 @@ public class DashboardController extends BaseController {
    	 * @return
    	 * @return: String
    	 */
-   	private String getTheme(HttpServletRequest request) {
+   	private String getTheme(HttpServletRequest request,HttpServletResponse response) {
    		// 默认风格
    		String theme = "tab";
    		if (StringUtils.isEmpty(theme)) {
@@ -138,20 +139,25 @@ public class DashboardController extends BaseController {
    				theme = cookie.getValue();
    			}
    		}
+   		if(!theme.equals("tab")&&!theme.equals("nomal")){
+   			theme = "tab";
+   			CookieUtils.setCookie(response, "theme", theme);
+   		}
    		return theme;
    	}
 
    	/**
    	 * Coookie设置
    	 */
+   	@ResponseBody
    	@RequestMapping(value = "/theme/{theme}")
-   	public String getThemeInCookie(ModelMap mmap,@PathVariable String theme, HttpServletRequest request,
+   	public AjaxResult getThemeInCookie(@PathVariable String theme, HttpServletRequest request,
    			HttpServletResponse response) {
    		if (!StringUtils.isEmpty(theme)) {
    			CookieUtils.setCookie(response, "theme", theme);
    		} else {
    			theme = CookieUtils.getCookie(request, "theme");
    		}
-   		return index(mmap, request);
+   		return AjaxResult.success();
    	}
 }

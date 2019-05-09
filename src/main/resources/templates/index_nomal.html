@@ -49,7 +49,7 @@
                 <li class="logo">
                     <span class="logo-lg">Dimple Blog</span>
                 </li>
-                 <li>
+                <li>
                     <div class="user-panel">
                         <a class="menuItem" title="个人中心" th:href="@{/system/user/profile}">
                             <div class="hide" th:text="个人中心"></div>
@@ -121,6 +121,14 @@
                                 <a th:href="@{/system/user/profile}" class="menuItem">
                                     <i class="fa fa-user"></i> 个人中心</a>
                             </li>
+                            <li class="mt5">
+                                <a onclick="changeTheme('tab');" class="menuItem">
+                                    <i class="fa fa-user"></i> tab模式</a>
+                            </li>
+                            <li class="mt5">
+                                <a onclick="changeTheme('nomal');" class="menuItem">
+                                    <i class="fa fa-user"></i> 普通模式</a>
+                            </li>
                             <li>
                                 <a onclick="resetPwd()" class="menuItem">
                                     <i class="fa fa-key"></i> 修改密码</a>
@@ -191,6 +199,20 @@
         function resetPwd() {
             var url = ctx + 'system/user/profile/resetPwd';
             $.modal.open("重置密码", url, '800', '500');
+        }
+        
+        //切换主题
+        function changeTheme(t_theme){
+            $.ajax({
+                url: ctx + "theme/"+t_theme,
+                data: {},
+                type: "post",
+                processData: false,
+                contentType: false,
+                success: function(result) {
+                	window.top.location.href=ctx+"index";
+                }
+            })
         }
 </script>
 </body>

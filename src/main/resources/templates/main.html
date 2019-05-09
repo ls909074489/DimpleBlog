@@ -220,7 +220,6 @@
             success: function (result) {
                 echarts_line_visitor.hideLoading();
                 if (result.code == 0) {
-                    console.log(result.data);
                     var xAxiss = new Array();
                     $.each(result.data, function (index, obj) {
                         xAxiss[index] = obj.date;
@@ -317,7 +316,6 @@
             url: "/dashboard/memJvmCpuData/list",
             type: "get",
             success: function (result) {
-                console.log(result)
                 if (result.code == 0) {
                     echarts_gauge_percent.hideLoading();
                     var option = echarts_gauge_percent.getOption();
