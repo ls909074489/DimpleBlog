@@ -1,15 +1,18 @@
 package com.dimple.common.utils.file;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.dimple.common.exception.file.FileNameLengthLimitExceededException;
 import com.dimple.common.exception.file.FileSizeLimitExceededException;
 import com.dimple.common.utils.DateUtils;
+import com.dimple.common.utils.ImageUtil;
 import com.dimple.common.utils.Md5Utils;
 import com.dimple.framework.config.SystemConfig;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @className: FileUploadUtils
@@ -107,6 +110,11 @@ public class FileUploadUtils {
 
         File desc = getAbsoluteFile(baseDir, baseDir + fileName);
         file.transferTo(desc);
+        
+        //压缩图
+        String smallThumbnailPath = ImageUtil.generateSize(72, 72,baseDir + fileName);
+        String largeThumbnailPath = ImageUtil.generateSize(800,356,baseDir + fileName);
+        System.out.println(largeThumbnailPath+">>>>>>>>"+smallThumbnailPath);
         return fileName;
     }
 
