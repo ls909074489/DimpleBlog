@@ -37,6 +37,8 @@ public class FileUploadUtils {
      * 默认上传的地址
      */
     private static String defaultBaseDir = SystemConfig.getProfile();
+    
+    public static String uploadFilePath ="/profile/upload";
 
     /**
      * 默认文件类型jpg

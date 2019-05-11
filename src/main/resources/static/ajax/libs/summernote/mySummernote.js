@@ -87,7 +87,7 @@ function sendFile($summernote, file) {
     var formData = new FormData();
     formData.append("file", file);
     $.ajax({
-        url: "/qiniu/image/upload",
+        url: "/common/upload",///qiniu/image/upload
         data: formData,
         cache: false,
         contentType: false,
@@ -96,9 +96,11 @@ function sendFile($summernote, file) {
         success: function (result) {
             console.log(result)
             if (result.code == web_status.SUCCESS) {
-                $summernote.summernote('insertImage', result.data, function ($image) {
+            	console.info("success>>>>>>111>>>>>>>");
+                /*$summernote.summernote('insertImage', result.data, function ($image) {
                     $image.attr('src', result.data);
-                });
+                });*/
+            	$summernote.summernote('insertImage', '/profile/upload/'+result.fileName);  
             } else {
                 $.modal.alertError(result.msg);
             }

@@ -2,6 +2,7 @@ package com.dimple.framework.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.dimple.common.utils.StringUtils;
+import com.dimple.common.utils.file.FileUploadUtils;
 import com.dimple.framework.shiro.realm.UserRealm;
 import com.dimple.framework.shiro.session.OnlineSessionDAO;
 import com.dimple.framework.shiro.session.OnlineSessionFactory;
@@ -280,6 +281,9 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/js/**", "anon");
         filterChainDefinitionMap.put("/dimple/**", "anon");
         filterChainDefinitionMap.put("/druid/**", "anon");
+        filterChainDefinitionMap.put(FileUploadUtils.uploadFilePath+"/**", "anon");
+        filterChainDefinitionMap.put("/public/**", "anon");
+        
         //前台界面设置允许访问
 //        setFront(filterChainDefinitionMap);
         filterChainDefinitionMap.put("/f/**", "anon");

@@ -38,7 +38,6 @@
                     </div>
                 </div>
 				<div>
-					<input type="button" onclick="submitHandler();" value="11111"/>
 				</div>
                 <div class="panel-body">
                     <div class="tab-content">
@@ -97,7 +96,8 @@
     function submitHandler() {
     	console.info("submitHandler=====111==========");
     	console.info($(".image-picker"));
-        return $(".image-picker").val();
+        //return $(".image-picker").val();
+        return $(".inputImgUrl").val();
     }
 
     function closeLocal() {
@@ -123,8 +123,6 @@
                         option.addClass("file");
                         select.append(option);
                     }
-                    console.info("loadImage==========="+select);
-                    console.info(select);
                     $("#imageView").append(select);
                     $("select").imagepicker();
                 }

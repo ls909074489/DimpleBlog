@@ -268,6 +268,8 @@ jQuery(function () {
         // $(".image-picker").val(json.data);
         // console.log($(".image-picker").val());
         $("select").imagepicker();
+        
+        $("#imageView").append('<input type="text" class="inputImgUrl" value="'+json.fileName+'"/>');
     });
 
     function updateStatus() {

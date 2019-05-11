@@ -161,8 +161,10 @@ public class ImageUtil {
          * 若图片横比200大，高比300大，图片按比例缩小，横为200或高为300
          */
     	String newFile = appendSuffix(fileName, SUFFIX);
-        Thumbnails.of(fileName).size(width,height).toFile(newFile);
-//        Thumbnails.of("images/test.jpg").size(2560, 2048).toFile("C:/image_2560x2048.jpg");
+    	//按指定大小把图片进行缩和放（会遵循原图高宽比例） 
+//        Thumbnails.of(fileName).size(width,height).toFile(newFile);
+        //不按比例，就按指定的大小进行缩放  
+        Thumbnails.of(fileName).size(width,height).keepAspectRatio(false).toFile(newFile);  
         return newFile;
     }
 
@@ -282,27 +284,32 @@ public class ImageUtil {
     
     public static void main(String[] args) throws IOException {
          //测试在指定目录下生成缩略图
-        String path = "D:\\image";
-        String[] files = new String[]{"C:\\Users\\liusheng\\Desktop\\all_table20190319.jpg"};
+//        String path = "D:\\image";
+//        String[] files = new String[]{"C:\\Users\\liusheng\\Desktop\\all_table20190319.jpg"};
 
-        List<String> list = ImageUtil.generateThumbnail2Directory(path, files);
-        System.out.println(list);
+//        List<String> list = ImageUtil.generateThumbnail2Directory(path, files);
+//        System.out.println(list);
 
         //将指定目录下的图片生成缩略图
-//        String path2 = "D:\\workspace\\idea\\individual\\springboot-learn\\springboot-thumbnail\\image";
+        String path2 = "D:\\workspace\\study\\DimpleBlog-master\\DimpleBlog\\src\\main\\resources\\static\\public\\jquery-transition-slider\\img\\ls";
 //        ImageUtil.generateDirectoryThumbnail(path2);
         
+        File[] files = new File(path2).listFiles();
+        for(File file:files){
+        	System.out.println(file.getAbsolutePath());
+        	  String smallThumbnailPath = ImageUtil.generateSize(72, 72,file.getAbsolutePath());
+//              String largeThumbnailPath = ImageUtil.generateSize(800,356,file.getAbsolutePath());
+        }
         
         
-        
-        ImageUtil thumbnailatorTest = new ImageUtil();
-        thumbnailatorTest.test2();
-        thumbnailatorTest.test3();
-        thumbnailatorTest.test4();
-        thumbnailatorTest.test5();
-        thumbnailatorTest.test6();
-        thumbnailatorTest.test7();
-        thumbnailatorTest.test8();
-        thumbnailatorTest.test9();
+//        ImageUtil thumbnailatorTest = new ImageUtil();
+//        thumbnailatorTest.test2();
+//        thumbnailatorTest.test3();
+//        thumbnailatorTest.test4();
+//        thumbnailatorTest.test5();
+//        thumbnailatorTest.test6();
+//        thumbnailatorTest.test7();
+//        thumbnailatorTest.test8();
+//        thumbnailatorTest.test9();
 	}
 }
