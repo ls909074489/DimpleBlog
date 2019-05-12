@@ -284,6 +284,10 @@ public class ShiroConfig {
         filterChainDefinitionMap.put(FileUploadUtils.uploadFilePath+"/**", "anon");
         filterChainDefinitionMap.put("/public/**", "anon");
         
+        filterChainDefinitionMap.put("/**.html", "anon");
+        filterChainDefinitionMap.put("/**/**.html", "anon");
+        
+        
         //前台界面设置允许访问
 //        setFront(filterChainDefinitionMap);
         filterChainDefinitionMap.put("/f/**", "anon");

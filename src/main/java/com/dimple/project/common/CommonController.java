@@ -1,6 +1,7 @@
 package com.dimple.project.common;
 
 import com.dimple.common.constant.CommonConstant;
+import com.dimple.common.utils.QrCodeUtils;
 import com.dimple.common.utils.StringUtils;
 import com.dimple.common.utils.file.FileUploadUtils;
 import com.dimple.common.utils.file.FileUtils;
@@ -12,11 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -106,5 +111,34 @@ public class CommonController {
             filename = URLEncoder.encode(filename, "utf-8");
         }
         return filename;
+    }
+    
+    /**
+     * 二维码
+     * @param request
+     * @param response
+     */
+    @RequestMapping("/qrcode")
+    public void qrcode( HttpServletRequest request, HttpServletResponse response) {
+        StringBuffer url = request.getRequestURL();
+        // 域名
+        String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
+
+        // 再加上请求链接
+        String requestUrl = tempContextUrl;
+        System.out.println(requestUrl);
+        OutputStream os = null;
+        try {
+            os = response.getOutputStream();
+            QrCodeUtils.encode(requestUrl, "/static/img/png.png", os, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+			try {
+				os.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
     }
 }
