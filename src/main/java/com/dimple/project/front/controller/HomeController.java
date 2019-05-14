@@ -1,5 +1,15 @@
 package com.dimple.project.front.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.dimple.common.constant.CommonConstant;
 import com.dimple.framework.aspectj.lang.annotation.VLog;
 import com.dimple.framework.web.controller.BaseController;
@@ -16,15 +26,6 @@ import com.dimple.project.system.carouselMap.service.CarouselMapService;
 import com.dimple.project.system.notice.service.INoticeService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
 
 /**
  * @className: HomeController
@@ -237,5 +238,14 @@ public class HomeController extends BaseController {
     public String images(Model model) {
         setCommonMessage(model);
         return "front/images";
+    }
+    
+    /**
+     * 图片显示
+     */
+    @VLog(title = "图片显示")
+    @GetMapping("/front/toLogin")
+    public String toLogin(Model model) {
+        return "front/login/login";
     }
 }

@@ -3,13 +3,24 @@ package com.dimple.project.front.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.dimple.common.utils.StringUtils;
+import com.dimple.common.utils.security.ShiroUtils;
 import com.dimple.framework.aspectj.lang.annotation.VLog;
 import com.dimple.framework.web.controller.BaseController;
+import com.dimple.framework.web.domain.AjaxResult;
 import com.dimple.project.blog.blog.domain.Blog;
 import com.dimple.project.blog.blog.service.BlogService;
 import com.dimple.project.blog.category.service.CategoryService;
@@ -84,8 +95,8 @@ public class CustomController  extends BaseController {
         model.addAttribute("blogs", new PageInfo<>(homeService.selectFrontBlogList(new Blog())));
         //放置轮播图
         model.addAttribute("carouselMaps", carouselMapService.selectCarouselMapListFront());
+        model.addAttribute("curUser", ShiroUtils.getSysUser());
         
-        // 查询用户信息
         User user = userService.selectUserByLoginName(loginName);
         if(user!=null){
         	model.addAttribute("user", user);
@@ -98,5 +109,39 @@ public class CustomController  extends BaseController {
     @VLog(title = "用户首页")
     public String loginNameIndex(@PathVariable String loginName,Integer pageNum,  Model model) {
         return defaultIndex(loginName, pageNum, model);        
+    }
+    
+    @PostMapping("/front/login")
+    @ResponseBody
+    public AjaxResult frontLogin(String loginName,String password,  Model model) {
+    	UsernamePasswordToken token = new UsernamePasswordToken(loginName, password, false);
+        Subject subject = SecurityUtils.getSubject();
+        try {
+            subject.login(token);
+            return success(loginName);
+        } catch (AuthenticationException e) {
+            String msg = "用户或密码错误";
+            if (StringUtils.isNotEmpty(e.getMessage())) {
+                msg = e.getMessage();
+            }
+            return error(msg);
+        }
+    }
+    
+    @RequestMapping("/front/loginSuc")
+    public String loginSuc(Model model) {
+    	User user = ShiroUtils.getSysUser();
+    	 if(user!=null){
+    		 Integer pageNum = 0;
+    		setCommonMessage(model,user.getLoginName());
+	        PageHelper.startPage(pageNum == null ? 1 : pageNum, 12, "create_time desc");
+	        model.addAttribute("blogs", new PageInfo<>(homeService.selectFrontBlogList(new Blog())));
+	        //放置轮播图
+	        model.addAttribute("carouselMaps", carouselMapService.selectCarouselMapListFront());
+    	        
+         	model.addAttribute("user", user);
+         	return redirect("/front/custom/index");
+         }
+         return "front/index";        
     }
 }
