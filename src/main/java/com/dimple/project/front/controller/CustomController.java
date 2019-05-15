@@ -163,14 +163,14 @@ public class CustomController  extends BaseController {
          return "front/index";        
     }
     
-    @RequestMapping("/front/logout")
-    public String loginLogout(String loginName,Model model,ServletRequest request, ServletResponse response) {
-    	Subject subject = SecurityUtils.getSubject();
-        if (subject != null) {
-            subject.logout();
-        }
-    	return defaultIndex(loginName, 0, model);  
-    }
+//    @RequestMapping("/front/logout")
+//    public String loginLogout(String loginName,Model model,ServletRequest request, ServletResponse response) {
+//    	Subject subject = SecurityUtils.getSubject();
+//        if (subject != null) {
+//            subject.logout();
+//        }
+//    	return defaultIndex(loginName, 0, model);  
+//    }
     
     
     /**
