@@ -111,6 +111,13 @@ public class CustomController  extends BaseController {
         return defaultIndex(loginName, pageNum, model);        
     }
     
+    
+    @VLog(title = "跳转到前端登录页面")
+    @GetMapping("/front/toLogin")
+    public String toLogin(Model model) {
+        return "front/login/login";
+    }
+    
     @PostMapping("/front/login")
     @ResponseBody
     public AjaxResult frontLogin(String loginName,String password,  Model model) {
@@ -144,4 +151,34 @@ public class CustomController  extends BaseController {
          }
          return "front/index";        
     }
+    
+    /**
+     * 注册
+     * @param loginName
+     * @param password
+     * @param model
+     * @return
+     */
+    @GetMapping("/front/toReg")
+    public String frontToReg(String loginName,String password,  Model model) {
+    	  return "front/login/reg";
+    }
+    
+    @PostMapping("/front/reg")
+    @ResponseBody
+    public AjaxResult frontReg(User user) {
+        try {
+        	user.setUserName(user.getLoginName());
+        	userService.regUser(user);
+            return success(user.getLoginName());
+        } catch (AuthenticationException e) {
+            String msg = "用户或密码错误";
+            if (StringUtils.isNotEmpty(e.getMessage())) {
+                msg = e.getMessage();
+            }
+            return error(msg);
+        }
+    }
+    
+  
 }

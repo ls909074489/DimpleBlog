@@ -3,12 +3,10 @@ package com.dimple.project.system.user.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.dimple.common.constant.UserConstants;
 import com.dimple.common.exception.BusinessException;
 import com.dimple.common.utils.StringUtils;
@@ -23,6 +21,8 @@ import com.dimple.project.system.user.domain.User;
 import com.dimple.project.system.user.domain.UserRole;
 import com.dimple.project.system.user.mapper.UserMapper;
 import com.dimple.project.system.user.mapper.UserRoleMapper;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @className: UserServiceImpl
@@ -352,4 +352,16 @@ public class UserServiceImpl implements IUserService {
         }
         return userMapper.updateUser(user);
     }
+
+	@Override
+	public int regUser(User user) {
+		 user.randomSalt();
+	        user.setPassword(passwordService.encryptPassword(user.getLoginName(), user.getPassword(), user.getSalt()));
+	        user.setCreateBy("前端注册");
+	        // 新增用户信息
+	        int rows = userMapper.insertUser(user);
+	        // 新增用户与角色管理
+	        insertUserRole(user);
+	        return rows;
+	}
 }

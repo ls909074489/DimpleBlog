@@ -149,4 +149,6 @@ public interface IUserService {
      * @return 结果
      */
     public int changeStatus(User user);
+    
+    public int regUser(User user) ;
 }

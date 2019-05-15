@@ -21,8 +21,8 @@
 	<div class="limiter">
 		<div class="container-login100" style="background-image: url('/public/front-login/images/bg-01.jpg');">
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
-				<form class="login100-form validate-form">
-					<span class="login100-form-title p-b-49" style="padding-bottom: 29px;">登录</span>
+				<form id="regForm" class="login100-form validate-form">
+					<span class="login100-form-title p-b-49" style="padding-bottom: 29px;">注册</span>
 					<span id="operTip" style="text-align:center;display: block;color: #f5222d;"></span>
 					<div class="wrap-input100 validate-input m-b-23" data-validate="请输入用户名">
 						<span class="label-input100">用户名</span>
@@ -35,15 +35,21 @@
 						<input class="input100" type="password" id="password" name="password" placeholder="请输入密码" value="123456">
 						<span class="focus-input100" data-symbol="&#xf190;"></span>
 					</div>
-
-					<div class="text-right p-t-8 p-b-31">
-						<!-- <a href="javascript:">忘记密码？</a> -->
+					<div class="wrap-input100 validate-input" data-validate="请输入邮箱">
+						<span class="label-input100">邮箱</span>
+						<input class="input100" type="text" id="email" name="email" placeholder="请输入邮箱" value="123456@qq.com">
+						<span class="focus-input100" data-symbol="&#xf23e;"></span>
 					</div>
-
+					<div class="wrap-input100 validate-input" data-validate="请输入手机号码">
+						<span class="label-input100">手机号码</span>
+						<input class="input100" type="text" id="phonenumber" name="phonenumber" placeholder="请输入手机号码" value="13688888888">
+						<span class="focus-input100" data-symbol="&#xf1f9;"></span>
+					</div>
+					<div class="text-right p-t-8 p-b-31"></div>
 					<div class="container-login100-form-btn">
 						<div class="wrap-login100-form-btn">
 							<div class="login100-form-bgbtn"></div>
-							<button class="login100-form-btn" type="button">登 录</button>
+							<button class="login100-form-btn" type="button">注册</button>
 						</div>
 					</div>
 
@@ -66,7 +72,7 @@
 					</div> -->
 
 					<div class="flex-col-c p-t-25">
-						<a href="/front/toReg" class="txt2">立即注册</a>
+						<a href="/front/toLogin" class="txt2">立即登录</a>
 					</div>
 				</form>
 			</div>
@@ -84,8 +90,8 @@
 		 $(".login100-form-btn").click(function(){
 			 $.ajax({
 		            type: "POST",
-		            url: "/front/login",
-		            data: {"loginName": $("#loginName").val(),"password":$("#password").val()},
+		            url: "/front/reg",
+		            data: $("#regForm").serialize(),
 		            dataType: "json",
 		            success: function (data) {
 		            	console.info(data);
