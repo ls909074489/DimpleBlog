@@ -74,23 +74,28 @@
                     <a th:href="${func.funcHref}"
                        th:text="${func.funcText}"></a>
                 </li>
+                <li class='drop' th:if="${curUser!=null}">
+                    <a href="JavaScript:;"><span  th:text="${curUser.loginName}"  style=""></span><i class='el-chevron-down'></i></a>
+                    <div class="drop-nav orange-text ">
+                        <ul>
+                            <li>
+                                <a href="/front/logout?loginName=${curUser.loginName}">退出登录</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li th:if="${curUser==null}">
+                	<a href="/front/toLogin">
+		                <img class="img-circle"
+		                     src="/front/images/default_head_img.gif"
+		                     alt="登录" title="登录" style="margin-top: 12px;">
+		          	 </a>
+                </li>
             </ul>
             <!--移动的滑动-->
             <div class="move-bg"></div>
             <!--移动的滑动 end-->
         </nav>
-        <!--登录-->
-        <div class="vip" style="width: 4%;float: right;text-align: right;">
-	        <div th:if="${curUser!=null}" style="margin-top: 20px;" th:text="${curUser.loginName}">
-	        </div>
-	        <span th:if="${curUser==null}">
-		         <a href="/front/toLogin">
-	                <img class="img-circle"
-	                     src="/front/images/default_head_img.gif"
-	                     alt="登录" title="登录" style="margin-top: 17px;">
-	          	 </a>
-	        </span>
-        </div>
         <!--手机导航-->
         <div class="mob-menu">
             <!--手机下拉菜单-->

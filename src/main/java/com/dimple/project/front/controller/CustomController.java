@@ -3,11 +3,17 @@ package com.dimple.project.front.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dimple.common.utils.StringUtils;
+import com.dimple.common.utils.reflect.ReflectUtils;
 import com.dimple.common.utils.security.ShiroUtils;
 import com.dimple.framework.aspectj.lang.annotation.VLog;
 import com.dimple.framework.web.controller.BaseController;
@@ -43,7 +50,11 @@ import com.github.pagehelper.PageInfo;
  */
 @Controller
 public class CustomController  extends BaseController {
-	 @Autowired
+		
+		private static Logger logger = LoggerFactory.getLogger(CustomController.class);
+
+	
+		@Autowired
 	    HomeService homeService;
 	    @Autowired
 	    BlogService blogService;
@@ -152,6 +163,16 @@ public class CustomController  extends BaseController {
          return "front/index";        
     }
     
+    @RequestMapping("/front/logout")
+    public String loginLogout(String loginName,Model model,ServletRequest request, ServletResponse response) {
+    	Subject subject = SecurityUtils.getSubject();
+        if (subject != null) {
+            subject.logout();
+        }
+    	return defaultIndex(loginName, 0, model);  
+    }
+    
+    
     /**
      * 注册
      * @param loginName
@@ -171,12 +192,12 @@ public class CustomController  extends BaseController {
         	user.setUserName(user.getLoginName());
         	userService.regUser(user);
             return success(user.getLoginName());
-        } catch (AuthenticationException e) {
-            String msg = "用户或密码错误";
-            if (StringUtils.isNotEmpty(e.getMessage())) {
-                msg = e.getMessage();
-            }
-            return error(msg);
+        }catch(DuplicateKeyException e){
+        		logger.error(e.getMessage());
+        	 return error("该用户已注册");
+        } catch (Exception e) {
+        	logger.error(e.getMessage());
+            return error("注册失败，请联系管理员");
         }
     }
     
