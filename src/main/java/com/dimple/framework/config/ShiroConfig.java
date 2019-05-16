@@ -1,15 +1,18 @@
 package com.dimple.framework.config;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.servlet.Filter;
-
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import com.dimple.common.utils.StringUtils;
+import com.dimple.common.utils.file.FileUploadUtils;
+import com.dimple.framework.shiro.realm.UserRealm;
+import com.dimple.framework.shiro.session.OnlineSessionDAO;
+import com.dimple.framework.shiro.session.OnlineSessionFactory;
+import com.dimple.framework.shiro.session.ShiroSessionListener;
+import com.dimple.framework.shiro.web.filter.LogoutFilter;
+import com.dimple.framework.shiro.web.filter.captcha.CaptchaValidateFilter;
+import com.dimple.framework.shiro.web.filter.online.OnlineSessionFilter;
+import com.dimple.framework.shiro.web.filter.sync.SyncOnlineSessionFilter;
+import com.dimple.framework.shiro.web.session.OnlineWebSessionManager;
+import com.dimple.framework.shiro.web.session.SpringSessionValidationScheduler;
 import org.apache.commons.io.IOUtils;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.codec.Base64;
@@ -27,21 +30,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.dimple.common.utils.StringUtils;
-import com.dimple.common.utils.file.FileUploadUtils;
-import com.dimple.common.utils.security.ShiroUtils;
-import com.dimple.framework.shiro.realm.UserRealm;
-import com.dimple.framework.shiro.session.OnlineSessionDAO;
-import com.dimple.framework.shiro.session.OnlineSessionFactory;
-import com.dimple.framework.shiro.session.ShiroSessionListener;
-import com.dimple.framework.shiro.web.filter.LogoutFilter;
-import com.dimple.framework.shiro.web.filter.captcha.CaptchaValidateFilter;
-import com.dimple.framework.shiro.web.filter.online.OnlineSessionFilter;
-import com.dimple.framework.shiro.web.filter.sync.SyncOnlineSessionFilter;
-import com.dimple.framework.shiro.web.session.OnlineWebSessionManager;
-import com.dimple.framework.shiro.web.session.SpringSessionValidationScheduler;
-
-import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+import javax.servlet.Filter;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @className: ShiroConfig
@@ -259,18 +255,6 @@ public class ShiroConfig {
         logoutFilter.setLoginUrl(loginUrl);
         return logoutFilter;
     }
-    
-    
-    public LogoutFilter frontLogoutFilter() {
-        LogoutFilter logoutFilter = new LogoutFilter();
-        String loginName = ShiroUtils.getLoginName();
-        if(StringUtils.isNotEmpty(loginName)){
-        	logoutFilter.setLoginUrl("/"+loginName+".html");
-        }else{
-        	logoutFilter.setLoginUrl("/");
-        }
-        return logoutFilter;
-    }
 
     /**
      * Shiro过滤器配置
@@ -326,9 +310,6 @@ public class ShiroConfig {
         filters.put("captchaValidate", captchaValidateFilter());
         // 注销成功，则跳转到指定页面
         filters.put("logout", logoutFilter());
-       // 注销成功，则跳转到指定页面
-        filters.put("front/logout", frontLogoutFilter());
-        
         shiroFilterFactoryBean.setFilters(filters);
 
         // 所有请求需要认证

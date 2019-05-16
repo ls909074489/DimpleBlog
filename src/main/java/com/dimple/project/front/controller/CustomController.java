@@ -26,6 +26,7 @@ import com.dimple.common.utils.StringUtils;
 import com.dimple.common.utils.reflect.ReflectUtils;
 import com.dimple.common.utils.security.ShiroUtils;
 import com.dimple.framework.aspectj.lang.annotation.VLog;
+import com.dimple.framework.shiro.session.OnlineSessionDAO;
 import com.dimple.framework.web.controller.BaseController;
 import com.dimple.framework.web.domain.AjaxResult;
 import com.dimple.project.blog.blog.domain.Blog;
@@ -36,6 +37,10 @@ import com.dimple.project.blog.tag.service.TagService;
 import com.dimple.project.front.domain.CustomFunc;
 import com.dimple.project.front.service.HomeService;
 import com.dimple.project.link.service.LinkService;
+import com.dimple.project.monitor.online.domain.OnlineSession;
+import com.dimple.project.monitor.online.domain.UserOnline;
+import com.dimple.project.monitor.online.domain.OnlineSession.OnlineStatus;
+import com.dimple.project.monitor.online.service.IUserOnlineService;
 import com.dimple.project.system.carouselMap.service.CarouselMapService;
 import com.dimple.project.system.notice.service.INoticeService;
 import com.dimple.project.system.user.domain.User;
@@ -70,7 +75,10 @@ public class CustomController  extends BaseController {
 	    CarouselMapService carouselMapService;
 	    @Autowired
 	    private IUserService userService;
-
+	    @Autowired
+	    private OnlineSessionDAO onlineSessionDAO;
+	    @Autowired
+	    private IUserOnlineService userOnlineService;
 	    /**
 	     * 设置前台页面公用的部分代码
 	     * 均设置Redis缓存
@@ -163,14 +171,30 @@ public class CustomController  extends BaseController {
          return "front/index";        
     }
     
-//    @RequestMapping("/front/logout")
-//    public String loginLogout(String loginName,Model model,ServletRequest request, ServletResponse response) {
-//    	Subject subject = SecurityUtils.getSubject();
-//        if (subject != null) {
-//            subject.logout();
+    @RequestMapping("/front/logout")
+    public String loginLogout(String loginName,Model model,ServletRequest request, ServletResponse response) {
+    	
+    	Subject subject = SecurityUtils.getSubject();
+    	System.out.println("===================="+subject.getSession().getId().toString());
+        if (subject != null) {
+            subject.logout();
+        }
+//        https://blog.csdn.net/Thinkingcao/article/details/87351521
+//    	ShiroUtils.logout();
+        
+//        String sessionId = subject.getSession().getId().toString();
+//        UserOnline online = userOnlineService.selectOnlineById(sessionId);
+//        if (online != null) {
+//        	OnlineSession onlineSession = (OnlineSession) onlineSessionDAO.readSession(online.getSessionId());
+//            if (onlineSession != null) {
+//            	onlineSession.setStatus(OnlineStatus.off_line);
+//                onlineSessionDAO.update(onlineSession);
+//                online.setStatus(OnlineStatus.off_line);
+//                userOnlineService.saveOnline(online);
+//            }
 //        }
-//    	return defaultIndex(loginName, 0, model);  
-//    }
+    	return redirect("/zhangsan.html");//defaultIndex(loginName, 0, model);  
+    }
     
     
     /**
