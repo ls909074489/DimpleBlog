@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * @Version: 1.1
  */
 @Slf4j
-public class LogoutFilter extends org.apache.shiro.web.filter.authc.LogoutFilter {
+public class FrontLogoutFilter extends org.apache.shiro.web.filter.authc.LogoutFilter {
 
     /**
      * 退出后重定向的地址
@@ -38,16 +38,24 @@ public class LogoutFilter extends org.apache.shiro.web.filter.authc.LogoutFilter
     public void setLoginUrl(String loginUrl) {
         this.loginUrl = loginUrl;
     }
+    
+    
+    public FrontLogoutFilter() {
+  	}
+    public FrontLogoutFilter(String loginUrl) {
+		this.loginUrl = loginUrl;
+	}
 
-    @Override
+	@Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
         try {
             Subject subject = getSubject(request, response);
-            String redirectUrl = getRedirectUrl(request, response, subject);
+            String redirectUrl = "";//getRedirectUrl(request, response, subject);
             try {
                 User user = ShiroUtils.getSysUser();
                 if (StringUtils.isNotNull(user)) {
                     String loginName = user.getLoginName();
+                    redirectUrl = "/"+loginName+".html";
                     // 记录用户退出日志
                     AsyncManager.me().execute(AsyncFactory.recordLogininfor(loginName, Constants.LOGOUT, MessageUtils.message("user.logout.success")));
                 }

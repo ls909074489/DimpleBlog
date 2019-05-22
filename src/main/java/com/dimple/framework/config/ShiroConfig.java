@@ -7,6 +7,7 @@ import com.dimple.framework.shiro.realm.UserRealm;
 import com.dimple.framework.shiro.session.OnlineSessionDAO;
 import com.dimple.framework.shiro.session.OnlineSessionFactory;
 import com.dimple.framework.shiro.session.ShiroSessionListener;
+import com.dimple.framework.shiro.web.filter.FrontLogoutFilter;
 import com.dimple.framework.shiro.web.filter.LogoutFilter;
 import com.dimple.framework.shiro.web.filter.captcha.CaptchaValidateFilter;
 import com.dimple.framework.shiro.web.filter.online.OnlineSessionFilter;
@@ -299,6 +300,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/captcha/captchaImage**", "anon");
         // 退出 logout地址，shiro去清除session
         filterChainDefinitionMap.put("/logout", "logout");
+        filterChainDefinitionMap.put("/frontLogout", "frontLogout");
         // 不需要拦截的访问
         filterChainDefinitionMap.put("/login", "anon,captchaValidate");
         // 系统权限列表
@@ -310,6 +312,9 @@ public class ShiroConfig {
         filters.put("captchaValidate", captchaValidateFilter());
         // 注销成功，则跳转到指定页面
         filters.put("logout", logoutFilter());
+        FrontLogoutFilter frontLogoutFilter = new FrontLogoutFilter();
+        frontLogoutFilter.setLoginUrl("front/custom/index");
+        filters.put("frontLogout", frontLogoutFilter);
         shiroFilterFactoryBean.setFilters(filters);
 
         // 所有请求需要认证

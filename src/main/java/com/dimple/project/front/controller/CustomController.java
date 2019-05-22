@@ -1,14 +1,20 @@
 package com.dimple.project.front.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.cache.Cache;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -171,29 +177,21 @@ public class CustomController  extends BaseController {
          return "front/index";        
     }
     
-    @RequestMapping("/front/logout")
-    public String loginLogout(String loginName,Model model,ServletRequest request, ServletResponse response) {
+    
+    @RequestMapping("/front/logout2")
+    public String loginLogout(String loginName,Model model,HttpServletRequest request, HttpServletResponse response) {
     	
     	Subject subject = SecurityUtils.getSubject();
-    	System.out.println("===================="+subject.getSession().getId().toString());
         if (subject != null) {
             subject.logout();
         }
-//        https://blog.csdn.net/Thinkingcao/article/details/87351521
-//    	ShiroUtils.logout();
-        
-//        String sessionId = subject.getSession().getId().toString();
-//        UserOnline online = userOnlineService.selectOnlineById(sessionId);
-//        if (online != null) {
-//        	OnlineSession onlineSession = (OnlineSession) onlineSessionDAO.readSession(online.getSessionId());
-//            if (onlineSession != null) {
-//            	onlineSession.setStatus(OnlineStatus.off_line);
-//                onlineSessionDAO.update(onlineSession);
-//                online.setStatus(OnlineStatus.off_line);
-//                userOnlineService.saveOnline(online);
-//            }
-//        }
-    	return redirect("/zhangsan.html");//defaultIndex(loginName, 0, model);  
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            Cookie temp = new Cookie(cookie.getName(), "");
+            temp.setMaxAge(0);
+            response.addCookie(temp);
+        }
+        return "front/custom/index";
     }
     
     
