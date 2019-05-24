@@ -1,5 +1,6 @@
 package com.dimple.project.front.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dimple.common.constant.CommonConstant;
+import com.dimple.common.utils.security.ShiroUtils;
 import com.dimple.framework.aspectj.lang.annotation.VLog;
 import com.dimple.framework.web.controller.BaseController;
 import com.dimple.framework.web.domain.AjaxResult;
@@ -19,11 +21,13 @@ import com.dimple.project.blog.blog.service.BlogService;
 import com.dimple.project.blog.category.service.CategoryService;
 import com.dimple.project.blog.tag.domain.Tag;
 import com.dimple.project.blog.tag.service.TagService;
+import com.dimple.project.front.domain.CustomFunc;
 import com.dimple.project.front.service.HomeService;
 import com.dimple.project.link.domain.Link;
 import com.dimple.project.link.service.LinkService;
 import com.dimple.project.system.carouselMap.service.CarouselMapService;
 import com.dimple.project.system.notice.service.INoticeService;
+import com.dimple.project.system.user.domain.User;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -57,6 +61,15 @@ public class HomeController extends BaseController {
      * 均设置Redis缓存
      */
     private void setCommonMessage(Model model) {
+    	User user = ShiroUtils.getSysUser();
+        if(user!=null){
+        	List<CustomFunc> funcList = new ArrayList<>();
+    		funcList.add(new CustomFunc("/" + user.getLoginName() + "/index.html", "首页"));
+    		funcList.add(new CustomFunc("/" + user.getLoginName() + "/images.html", "图片"));
+    		model.addAttribute("funcList", funcList);
+    		model.addAttribute("user", user);
+        }
+		
         //获取分类下拉项中的分类
         model.addAttribute("categories", categoryService.selectSupportCategoryList());
         //查询所有的标签
@@ -84,6 +97,12 @@ public class HomeController extends BaseController {
         model.addAttribute("blogs", new PageInfo<>(homeService.selectFrontBlogList(new Blog())));
         //放置轮播图
         model.addAttribute("carouselMaps", carouselMapService.selectCarouselMapListFront());
+        
+        User user = ShiroUtils.getSysUser();
+        if(user!=null){
+        	model.addAttribute("curUser", user);
+        	return "front/custom/index";
+        }
         return "front/index";
     }
 

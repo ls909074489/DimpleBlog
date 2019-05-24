@@ -55,7 +55,7 @@ public class FrontLogoutFilter extends org.apache.shiro.web.filter.authc.LogoutF
                 User user = ShiroUtils.getSysUser();
                 if (StringUtils.isNotNull(user)) {
                     String loginName = user.getLoginName();
-                    redirectUrl = "/"+loginName+".html";
+                    redirectUrl = "/"+user.getLoginName()+".html";
                     // 记录用户退出日志
                     AsyncManager.me().execute(AsyncFactory.recordLogininfor(loginName, Constants.LOGOUT, MessageUtils.message("user.logout.success")));
                 }
