@@ -3,7 +3,7 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title th:text="${user.loginName+'的个人博客'}"></title>
+    <title th:if="${curUser!=null}" th:text="${curUser.loginName+'的个人博客'}"></title>
     <meta name="baidu_union_verify" content="7aef518d672b5859ca390cabb140abf3">
     <div th:include="include-front :: head"></div>
     <style>
