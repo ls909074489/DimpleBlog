@@ -10,14 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.dimple.common.utils.security.ShiroUtils;
 import com.dimple.framework.aspectj.lang.annotation.Log;
 import com.dimple.framework.aspectj.lang.enums.BusinessType;
-import com.dimple.framework.shiro.session.OnlineSessionDAO;
 import com.dimple.framework.web.controller.BaseController;
 import com.dimple.framework.web.domain.AjaxResult;
 import com.dimple.framework.web.page.TableDataInfo;
-import com.dimple.project.monitor.online.domain.OnlineSession;
 import com.dimple.project.monitor.online.domain.OnlineSession.OnlineStatus;
 import com.dimple.project.monitor.online.domain.UserOnline;
 import com.dimple.project.monitor.online.service.IUserOnlineService;
@@ -37,8 +36,8 @@ public class UserOnlineController extends BaseController {
     @Autowired
     private IUserOnlineService userOnlineService;
 
-    @Autowired
-    private OnlineSessionDAO onlineSessionDAO;
+//    @Autowired
+//    private OnlineSessionDAO onlineSessionDAO;
 
     @RequiresPermissions("monitor:online:view")
     @GetMapping()
@@ -65,15 +64,15 @@ public class UserOnlineController extends BaseController {
             if (online == null) {
                 return error("用户已下线");
             }
-            OnlineSession onlineSession = (OnlineSession) onlineSessionDAO.readSession(online.getSessionId());
-            if (onlineSession == null) {
-                return error("用户已下线");
-            }
+//            OnlineSession onlineSession = (OnlineSession) onlineSessionDAO.readSession(online.getSessionId());
+//            if (onlineSession == null) {
+//                return error("用户已下线");
+//            }
             if (sessionId.equals(ShiroUtils.getSessionId())) {
                 return error("当前登陆用户无法强退");
             }
-            onlineSession.setStatus(OnlineStatus.off_line);
-            onlineSessionDAO.update(onlineSession);
+//            onlineSession.setStatus(OnlineStatus.off_line);
+//            onlineSessionDAO.update(onlineSession);
             online.setStatus(OnlineStatus.off_line);
             userOnlineService.saveOnline(online);
         }
@@ -92,12 +91,12 @@ public class UserOnlineController extends BaseController {
         if (online == null) {
             return error("用户已下线");
         }
-        OnlineSession onlineSession = (OnlineSession) onlineSessionDAO.readSession(online.getSessionId());
-        if (onlineSession == null) {
-            return error("用户已下线");
-        }
-        onlineSession.setStatus(OnlineStatus.off_line);
-        onlineSessionDAO.update(onlineSession);
+//        OnlineSession onlineSession = (OnlineSession) onlineSessionDAO.readSession(online.getSessionId());
+//        if (onlineSession == null) {
+//            return error("用户已下线");
+//        }
+//        onlineSession.setStatus(OnlineStatus.off_line);
+//        onlineSessionDAO.update(onlineSession);
         online.setStatus(OnlineStatus.off_line);
         userOnlineService.saveOnline(online);
         return success();

@@ -3,12 +3,11 @@ package com.dimple.project.monitor.online.service;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.dimple.common.utils.DateUtils;
 import com.dimple.common.utils.StringUtils;
-import com.dimple.framework.shiro.session.OnlineSessionDAO;
 import com.dimple.project.monitor.online.domain.UserOnline;
 import com.dimple.project.monitor.online.mapper.UserOnlineMapper;
 
@@ -24,8 +23,8 @@ public class UserOnlineServiceImpl implements IUserOnlineService {
     @Autowired
     private UserOnlineMapper userOnlineDao;
 
-    @Autowired
-    private OnlineSessionDAO onlineSessionDAO;
+//    @Autowired
+//    private OnlineSessionDAO onlineSessionDAO;
 
     /**
      * 通过会话序号查询信息
@@ -95,11 +94,11 @@ public class UserOnlineServiceImpl implements IUserOnlineService {
      */
     @Override
     public void forceLogout(String sessionId) {
-        Session session = onlineSessionDAO.readSession(sessionId);
-        if (session == null) {
-            return;
-        }
-        session.setTimeout(1000);
+//        Session session = onlineSessionDAO.readSession(sessionId);
+//        if (session == null) {
+//            return;
+//        }
+//        session.setTimeout(1000);
         userOnlineDao.deleteOnlineById(sessionId);
     }
 

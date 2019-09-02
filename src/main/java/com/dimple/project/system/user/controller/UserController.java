@@ -10,6 +10,9 @@ import com.dimple.framework.web.page.TableDataInfo;
 import com.dimple.project.system.role.service.IRoleService;
 import com.dimple.project.system.user.domain.User;
 import com.dimple.project.system.user.service.IUserService;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +29,7 @@ import java.util.List;
  * @Date: 2019/3/13
  * @Version: 1.1
  */
+@Slf4j
 @Controller
 @RequestMapping("/system/user")
 public class UserController extends BaseController {
@@ -40,6 +44,7 @@ public class UserController extends BaseController {
     @RequiresPermissions("system:user:view")
     @GetMapping()
     public String user() {
+    	log.info(">>>>>>>>>>>>>>1111111111111111111>>>>>>>>>>>>>");
         return prefix + "/user";
     }
 

@@ -3,7 +3,6 @@ package com.dimple.framework.shiro.realm;
 import java.util.HashSet;
 import java.util.Set;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -18,8 +17,6 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dimple.common.exception.user.CaptchaException;
@@ -33,6 +30,8 @@ import com.dimple.framework.shiro.service.LoginService;
 import com.dimple.project.system.menu.service.IMenuService;
 import com.dimple.project.system.role.service.IRoleService;
 import com.dimple.project.system.user.domain.User;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @className: UserRealm

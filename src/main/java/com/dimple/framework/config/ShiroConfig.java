@@ -1,44 +1,42 @@
 package com.dimple.framework.config;
 
-import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
-import com.dimple.common.utils.StringUtils;
-import com.dimple.common.utils.file.FileUploadUtils;
-import com.dimple.framework.shiro.realm.UserRealm;
-import com.dimple.framework.shiro.session.OnlineSessionDAO;
-import com.dimple.framework.shiro.session.OnlineSessionFactory;
-import com.dimple.framework.shiro.session.ShiroSessionListener;
-import com.dimple.framework.shiro.web.filter.FrontLogoutFilter;
-import com.dimple.framework.shiro.web.filter.LogoutFilter;
-import com.dimple.framework.shiro.web.filter.captcha.CaptchaValidateFilter;
-import com.dimple.framework.shiro.web.filter.online.OnlineSessionFilter;
-import com.dimple.framework.shiro.web.filter.sync.SyncOnlineSessionFilter;
-import com.dimple.framework.shiro.web.session.OnlineWebSessionManager;
-import com.dimple.framework.shiro.web.session.SpringSessionValidationScheduler;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.servlet.Filter;
+
 import org.apache.commons.io.IOUtils;
-import org.apache.shiro.cache.ehcache.EhCacheManager;
+//import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.config.ConfigurationException;
 import org.apache.shiro.io.ResourceUtils;
 import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.session.SessionListener;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.crazycake.shiro.RedisCacheManager;
+import org.crazycake.shiro.RedisManager;
+import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.servlet.Filter;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.dimple.common.utils.file.FileUploadUtils;
+import com.dimple.framework.shiro.realm.UserRealm;
+import com.dimple.framework.shiro.session.ShiroSessionListener;
+import com.dimple.framework.shiro.web.filter.FrontLogoutFilter;
+import com.dimple.framework.shiro.web.filter.KickoutSessionControlFilter;
+import com.dimple.framework.shiro.web.filter.LogoutFilter;
+import com.dimple.framework.shiro.web.filter.captcha.CaptchaValidateFilter;
+
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 
 /**
  * @className: ShiroConfig
@@ -90,22 +88,33 @@ public class ShiroConfig {
     // 权限认证失败地址
     @Value("${shiro.user.unauthorizedUrl}")
     private String unauthorizedUrl;
+    
+    @Value("${spring.redis.host}")
+    private String host;
+
+    @Value("${spring.redis.port}")
+    private int port;
+
+
+    @Value("${spring.redis.password}")
+    private String password;
+    
 
     /**
      * 缓存管理器 使用Ehcache实现
      */
-    @Bean
-    public EhCacheManager getEhCacheManager() {
-        net.sf.ehcache.CacheManager cacheManager = net.sf.ehcache.CacheManager.getCacheManager("dimple");
-        EhCacheManager em = new EhCacheManager();
-        if (StringUtils.isNull(cacheManager)) {
-            em.setCacheManager(new net.sf.ehcache.CacheManager(getCacheManagerConfigFileInputStream()));
-            return em;
-        } else {
-            em.setCacheManager(cacheManager);
-            return em;
-        }
-    }
+//    @Bean
+//    public EhCacheManager getEhCacheManager() {
+//        net.sf.ehcache.CacheManager cacheManager = net.sf.ehcache.CacheManager.getCacheManager("dimple");
+//        EhCacheManager em = new EhCacheManager();
+//        if (StringUtils.isNull(cacheManager)) {
+//            em.setCacheManager(new net.sf.ehcache.CacheManager(getCacheManagerConfigFileInputStream()));
+//            return em;
+//        } else {
+//            em.setCacheManager(cacheManager);
+//            return em;
+//        }
+//    }
 
 
     /**
@@ -130,30 +139,37 @@ public class ShiroConfig {
     /**
      * 自定义Realm
      */
+//    @Bean
+//    public UserRealm userRealm(EhCacheManager cacheManager) {
+//        UserRealm userRealm = new UserRealm();
+//        userRealm.setCacheManager(cacheManager);
+//        return userRealm;
+//    }
+    
     @Bean
-    public UserRealm userRealm(EhCacheManager cacheManager) {
+    public UserRealm userRealm() {
         UserRealm userRealm = new UserRealm();
-        userRealm.setCacheManager(cacheManager);
+//        userRealm.setCacheManager(cacheManager);
         return userRealm;
     }
 
     /**
      * 自定义sessionDAO会话
      */
-    @Bean
-    public OnlineSessionDAO sessionDAO() {
-        OnlineSessionDAO sessionDAO = new OnlineSessionDAO();
-        return sessionDAO;
-    }
+//    @Bean
+//    public OnlineSessionDAO sessionDAO() {
+//        OnlineSessionDAO sessionDAO = new OnlineSessionDAO();
+//        return sessionDAO;
+//    }
 
     /**
      * 自定义sessionFactory会话
      */
-    @Bean
-    public OnlineSessionFactory sessionFactory() {
-        OnlineSessionFactory sessionFactory = new OnlineSessionFactory();
-        return sessionFactory;
-    }
+//    @Bean
+//    public OnlineSessionFactory sessionFactory() {
+//        OnlineSessionFactory sessionFactory = new OnlineSessionFactory();
+//        return sessionFactory;
+//    }
 
     /**
      * 配置Session监听
@@ -168,68 +184,68 @@ public class ShiroConfig {
     /**
      * 自定义sessionFactory调度器
      */
-    @Bean
-    public SpringSessionValidationScheduler sessionValidationScheduler() {
-        SpringSessionValidationScheduler sessionValidationScheduler = new SpringSessionValidationScheduler();
-        // 相隔多久检查一次session的有效性，单位毫秒，默认就是10分钟
-        sessionValidationScheduler.setSessionValidationInterval(validationInterval * 60 * 1000);
-        // 设置会话验证调度器进行会话验证时的会话管理器
-        sessionValidationScheduler.setSessionManager(sessionValidationManager());
-        return sessionValidationScheduler;
-    }
+//    @Bean
+//    public SpringSessionValidationScheduler sessionValidationScheduler() {
+//        SpringSessionValidationScheduler sessionValidationScheduler = new SpringSessionValidationScheduler();
+//        // 相隔多久检查一次session的有效性，单位毫秒，默认就是10分钟
+//        sessionValidationScheduler.setSessionValidationInterval(validationInterval * 60 * 1000);
+//        // 设置会话验证调度器进行会话验证时的会话管理器
+//        sessionValidationScheduler.setSessionManager(sessionValidationManager());
+//        return sessionValidationScheduler;
+//    }
 
     /**
      * 会话管理器
      */
-    @Bean
-    public OnlineWebSessionManager sessionValidationManager() {
-        OnlineWebSessionManager manager = new OnlineWebSessionManager();
-        Collection<SessionListener> listeners = new ArrayList<SessionListener>();
-        //配置监听
-        listeners.add(sessionListener());
-        manager.setSessionListeners(listeners);
-
-        // 加入缓存管理器
-        manager.setCacheManager(getEhCacheManager());
-        // 删除过期的session
-        manager.setDeleteInvalidSessions(true);
-        // 设置全局session超时时间
-        manager.setGlobalSessionTimeout(expireTime * 60 * 1000);
-        // 去掉 JSESSIONID
-        manager.setSessionIdUrlRewritingEnabled(false);
-        // 是否定时检查session
-        manager.setSessionValidationSchedulerEnabled(true);
-        // 自定义SessionDao
-        manager.setSessionDAO(sessionDAO());
-        // 自定义sessionFactory
-        manager.setSessionFactory(sessionFactory());
-        return manager;
-    }
+//    @Bean
+//    public OnlineWebSessionManager sessionValidationManager() {
+//        OnlineWebSessionManager manager = new OnlineWebSessionManager();
+//        Collection<SessionListener> listeners = new ArrayList<SessionListener>();
+//        //配置监听
+//        listeners.add(sessionListener());
+//        manager.setSessionListeners(listeners);
+//
+//        // 加入缓存管理器
+//        manager.setCacheManager(getEhCacheManager());
+//        // 删除过期的session
+//        manager.setDeleteInvalidSessions(true);
+//        // 设置全局session超时时间
+//        manager.setGlobalSessionTimeout(expireTime * 60 * 1000);
+//        // 去掉 JSESSIONID
+//        manager.setSessionIdUrlRewritingEnabled(false);
+//        // 是否定时检查session
+//        manager.setSessionValidationSchedulerEnabled(true);
+//        // 自定义SessionDao
+//        manager.setSessionDAO(sessionDAO());
+//        // 自定义sessionFactory
+//        manager.setSessionFactory(sessionFactory());
+//        return manager;
+//    }
 
     /**
      * 会话管理器
      */
-    @Bean
-    public OnlineWebSessionManager sessionManager() {
-        OnlineWebSessionManager manager = new OnlineWebSessionManager();
-        // 加入缓存管理器
-        manager.setCacheManager(getEhCacheManager());
-        // 删除过期的session
-        manager.setDeleteInvalidSessions(true);
-        // 设置全局session超时时间
-        manager.setGlobalSessionTimeout(expireTime * 60 * 1000);
-        // 去掉 JSESSIONID
-        manager.setSessionIdUrlRewritingEnabled(false);
-        // 定义要使用的无效的Session定时调度器
-        manager.setSessionValidationScheduler(sessionValidationScheduler());
-        // 是否定时检查session
-        manager.setSessionValidationSchedulerEnabled(true);
-        // 自定义SessionDao
-        manager.setSessionDAO(sessionDAO());
-        // 自定义sessionFactory
-        manager.setSessionFactory(sessionFactory());
-        return manager;
-    }
+//    @Bean
+//    public OnlineWebSessionManager sessionManager() {
+//        OnlineWebSessionManager manager = new OnlineWebSessionManager();
+//        // 加入缓存管理器
+//        manager.setCacheManager(getEhCacheManager());
+//        // 删除过期的session
+//        manager.setDeleteInvalidSessions(true);
+//        // 设置全局session超时时间
+//        manager.setGlobalSessionTimeout(expireTime * 60 * 1000);
+//        // 去掉 JSESSIONID
+//        manager.setSessionIdUrlRewritingEnabled(false);
+//        // 定义要使用的无效的Session定时调度器
+//        manager.setSessionValidationScheduler(sessionValidationScheduler());
+//        // 是否定时检查session
+//        manager.setSessionValidationSchedulerEnabled(true);
+//        // 自定义SessionDao
+//        manager.setSessionDAO(sessionDAO());
+//        // 自定义sessionFactory
+//        manager.setSessionFactory(sessionFactory());
+//        return manager;
+//    }
 
     /**
      * 安全管理器
@@ -242,12 +258,66 @@ public class ShiroConfig {
         // 记住我
         securityManager.setRememberMeManager(rememberMeManager());
         // 注入缓存管理器;
-        securityManager.setCacheManager(getEhCacheManager());
+//        securityManager.setCacheManager(getEhCacheManager());
+//        // session管理器
+//        securityManager.setSessionManager(sessionManager());
+        
+        // 注入缓存管理器;
+        securityManager.setCacheManager(redisCacheManager());
         // session管理器
         securityManager.setSessionManager(sessionManager());
+        
         return securityManager;
     }
 
+    /**
+     * cacheManager 缓存 redis实现
+     * 使用的是shiro-redis开源插件
+     * @return
+     */
+    @Bean
+    public RedisCacheManager redisCacheManager() {
+        RedisCacheManager redisCacheManager = new RedisCacheManager();
+        redisCacheManager.setRedisManager(redisManager());
+        return redisCacheManager;
+    }
+    
+    /**
+     * 配置shiro redisManager
+     * 使用的是shiro-redis开源插件
+     * @return
+     */
+    public RedisManager redisManager() {
+        RedisManager redisManager = new RedisManager();
+        redisManager.setHost(host);
+        redisManager.setPort(port);
+        // 配置缓存过期时间
+        redisManager.setExpire(1800);
+        redisManager.setPassword(password);
+        return redisManager;
+    }
+    
+    /**
+     * RedisSessionDAO shiro sessionDao层的实现 通过redis
+     * 使用的是shiro-redis开源插件
+     */
+    @Bean
+    public RedisSessionDAO redisSessionDAO() {
+        RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
+        redisSessionDAO.setRedisManager(redisManager());
+        return redisSessionDAO;
+    }
+    
+    /**
+     * shiro session的管理
+     */
+    @Bean
+    public DefaultWebSessionManager sessionManager() {
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        sessionManager.setSessionDAO(redisSessionDAO());
+        return sessionManager;
+    }
+    
     /**
      * 退出过滤器
      */
@@ -307,9 +377,12 @@ public class ShiroConfig {
         // filterChainDefinitionMap.putAll(SpringUtils.getBean(IMenuService.class).selectPermsAll());
 
         Map<String, Filter> filters = new LinkedHashMap<>();
-        filters.put("onlineSession", onlineSessionFilter());
-        filters.put("syncOnlineSession", syncOnlineSessionFilter());
+//        filters.put("onlineSession", onlineSessionFilter());
+//        filters.put("syncOnlineSession", syncOnlineSessionFilter());
         filters.put("captchaValidate", captchaValidateFilter());
+        filters.put("kickout", kickoutSessionControlFilter());
+        
+        
         // 注销成功，则跳转到指定页面
         filters.put("logout", logoutFilter());
         FrontLogoutFilter frontLogoutFilter = new FrontLogoutFilter();
@@ -318,30 +391,53 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilters(filters);
 
         // 所有请求需要认证
-        filterChainDefinitionMap.put("/**", "user,onlineSession,syncOnlineSession");
+//        filterChainDefinitionMap.put("/**", "user,onlineSession,syncOnlineSession");
+        filterChainDefinitionMap.put("/**", "user");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         return shiroFilterFactoryBean;
+    }
+    
+    
+    /**
+     * 限制同一账号登录同时登录人数控制
+     * @return
+     */
+    public KickoutSessionControlFilter kickoutSessionControlFilter(){
+        KickoutSessionControlFilter kickoutSessionControlFilter = new KickoutSessionControlFilter();
+        //使用cacheManager获取相应的cache来缓存用户登录的会话；用于保存用户—会话之间的关系的；
+        //这里我们还是用之前shiro使用的redisManager()实现的cacheManager()缓存管理
+        //也可以重新另写一个，重新配置缓存时间之类的自定义缓存属性
+        kickoutSessionControlFilter.setCacheManager(redisCacheManager());
+        //用于根据会话ID，获取会话进行踢出操作的；
+        kickoutSessionControlFilter.setSessionManager(sessionManager());
+        //是否踢出后来登录的，默认是false；即后者登录的用户踢出前者登录的用户；踢出顺序。
+        kickoutSessionControlFilter.setKickoutAfter(false);
+        //同一个用户最大的会话数，默认5；比如5的意思是同一个用户允许最多同时五个人登录；
+        kickoutSessionControlFilter.setMaxSession(5);
+        //被踢出后重定向到的地址；
+        kickoutSessionControlFilter.setKickoutUrl("/kickout");
+        return kickoutSessionControlFilter;
     }
 
     /**
      * 自定义在线用户处理过滤器
      */
-    @Bean
-    public OnlineSessionFilter onlineSessionFilter() {
-        OnlineSessionFilter onlineSessionFilter = new OnlineSessionFilter();
-        onlineSessionFilter.setLoginUrl(loginUrl);
-        return onlineSessionFilter;
-    }
+//    @Bean
+//    public OnlineSessionFilter onlineSessionFilter() {
+//        OnlineSessionFilter onlineSessionFilter = new OnlineSessionFilter();
+//        onlineSessionFilter.setLoginUrl(loginUrl);
+//        return onlineSessionFilter;
+//    }
 
     /**
      * 自定义在线用户同步过滤器
      */
-    @Bean
-    public SyncOnlineSessionFilter syncOnlineSessionFilter() {
-        SyncOnlineSessionFilter syncOnlineSessionFilter = new SyncOnlineSessionFilter();
-        return syncOnlineSessionFilter;
-    }
+//    @Bean
+//    public SyncOnlineSessionFilter syncOnlineSessionFilter() {
+//        SyncOnlineSessionFilter syncOnlineSessionFilter = new SyncOnlineSessionFilter();
+//        return syncOnlineSessionFilter;
+//    }
 
     /**
      * 自定义验证码过滤器

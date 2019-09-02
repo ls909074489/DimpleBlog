@@ -23,7 +23,7 @@ dimple:
 # 开发环境配置
 server:
   # 服务端口
-  port: 80
+  port: 8080
   servlet:
     # 项目contextPath
     context-path: /
@@ -78,7 +78,13 @@ spring:
   redis:
     host: 127.0.0.1
     port: 6379
-    database: 11
+    password:
+    #timeout: 0
+    pool:
+      max-idle: 8
+      min-idle: 0
+      max-active: 8
+      max-wait: -1
 # MyBatis
 mybatis:
   # 搜索指定包别名

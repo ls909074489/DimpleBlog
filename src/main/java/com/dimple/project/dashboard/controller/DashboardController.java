@@ -53,8 +53,8 @@ public class DashboardController extends BaseController {
     VisitLogService visitLogService;
     @Autowired
     DashboardService dashboardService;
-    @Autowired
-    OnlineSessionDAO onlineSessionDAO;
+//    @Autowired
+//    OnlineSessionDAO onlineSessionDAO;
 
     // 系统首页
     @GetMapping("/index")
@@ -81,7 +81,7 @@ public class DashboardController extends BaseController {
         model.addAttribute("draft", blogService.selectBlogCountByStatus(BlogConstants.BLOG_DRAFT));
         model.addAttribute("garbage", blogService.selectBlogCountByStatus(BlogConstants.BLOG_GARBAGE));
         //在线用户数量
-        model.addAttribute("onlineCount", onlineSessionDAO.getActiveSessions().size());
+//        model.addAttribute("onlineCount", onlineSessionDAO.getActiveSessions().size());
         //访客总人数
         model.addAttribute("totalCount", visitLogService.selectVisitLogTotalCount());
         //本月访客人数
